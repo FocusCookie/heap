@@ -1,0 +1,33 @@
+.node {
+  font: bold 2rem sans-serif;
+}
+
+.node__bg {
+  fill: rgba(63, 63, 70, 1);
+}
+.node__bg--insert {
+  fill: rgba(253, 224, 71, 1);
+}
+
+.node__outline {
+  fill: none;
+  stroke: white;
+  stroke-width: 2px;
+}
+.node__outline--insert,
+.node__outline--head {
+  stroke: rgba(253, 224, 71, 1);
+}
+
+.node__text {
+  font-family: Arial-BoldMT, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  fill: white;
+}
+.node__text--head {
+  fill: rgba(253, 224, 71, 1);
+}
+.node__text--insert {
+  fill: rgba(63, 63, 70, 1);
+}
