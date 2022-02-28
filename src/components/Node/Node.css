@@ -1,4 +1,8 @@
 .node {
+  fill-rule: evenodd;
+  clip-rule: evenodd;
+  stroke-linejoin: round;
+  stroke-miterlimit: 2;
   font: bold 2rem sans-serif;
 }
 
@@ -20,10 +24,10 @@
 }
 
 .node__text {
-  font-family: Arial-BoldMT, Arial, sans-serif;
+  font-family: "Arial-BoldMT", "Arial", sans-serif;
   font-weight: 700;
-  font-size: 2rem;
-  fill: white;
+  font-size: 32px;
+  fill: #fff;
 }
 .node__text--head {
   fill: rgba(253, 224, 71, 1);
