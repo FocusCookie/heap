@@ -54,8 +54,9 @@ function deleteNode(heap, nodeIndexToDelete) {
       var rightNode = data[parentRightNodeIndex];
       var switchParentWithChildNode =
         leftNode > parent_2 || rightNode > parent_2;
-      if (switchParentWithChildNode) {
-        var switchParentWithLeftNode = leftNode > rightNode;
+      if (switchParentWithChildNode && rightNode ^ leftNode) {
+        var switchParentWithLeftNode =
+          (leftNode && leftNode > rightNode) || (leftNode && !rightNode);
         if (switchParentWithLeftNode) {
           data[parentIndex] = leftNode;
           data[parentLeftNodeIndex] = parent_2;
@@ -77,10 +78,10 @@ const toAdd = [90, 89, 72, 36, 75, 70, 65, 21, 18, 15, 12, 63];
 
 console.log("before: ", toAdd);
 const deletedRootOnce = deleteNode(toAdd, 0);
-console.log("delete index 0: ", deletedRootOnce);
+console.log("delete once index 0: ", deletedRootOnce);
 
 const deletedRootSecond = deleteNode(deletedRootOnce, 0);
-console.log("delete index 0: ", deletedRootSecond);
+console.log("second: ", deletedRootSecond);
 
 // export { insert, peek };
 /*

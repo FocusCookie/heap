@@ -57,14 +57,16 @@ function deleteNode(heap: number[], nodeIndexToDelete: number): number[] {
     while (!checkedTreeForBalancing) {
       const parentLeftNodeIndex: number = 2 * parentIndex + 1;
       const parentRightNodeIndex: number = 2 * parentIndex + 2;
+
       const parent: number = data[parentIndex];
       const leftNode: number = data[parentLeftNodeIndex];
       const rightNode: number = data[parentRightNodeIndex];
 
       const switchParentWithChildNode = leftNode > parent || rightNode > parent;
 
-      if (switchParentWithChildNode) {
-        const switchParentWithLeftNode = leftNode > rightNode;
+      if (switchParentWithChildNode && rightNode ^ leftNode) {
+        const switchParentWithLeftNode =
+          (leftNode && leftNode > rightNode) || (leftNode && !rightNode);
 
         if (switchParentWithLeftNode) {
           data[parentIndex] = leftNode;
@@ -86,12 +88,16 @@ function deleteNode(heap: number[], nodeIndexToDelete: number): number[] {
 
 /*
  const toAdd = [90, 89, 72, 36, 75, 70, 65, 21, 18, 15, 12, 63];
-
-console.log("before: ", toAdd);
-console.log("Insert 12: ", insert(toAdd, 91)); 
+  
+  console.log("before: ", toAdd);
+  const deletedRootOnce = deleteNode(toAdd, 0);
+  console.log("delete once index 0: ", deletedRootOnce);
+  
+  const deletedRootSecond = deleteNode(deletedRootOnce, 0);
+  console.log("second: ", deletedRootSecond);
 */
 
-// export { insert, peek };
+export { insert, peek, deleteNode };
 
 /*  
    index from 0
