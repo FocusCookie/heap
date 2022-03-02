@@ -1,6 +1,8 @@
 import { useEffect, useReducer, useState } from "react";
 import MaxHeap from "../functions/MaxHeap";
 
+//TODO: Implement the heap functions not wiht import, because i need to make thame timed in an interval each step to display it in
+
 interface State {
   status: string;
   data: number[];
@@ -14,6 +16,8 @@ enum ActionKind {
   REMOVING,
   REMOVED,
   ERROR,
+  HEAD_UPDATED,
+  RESET_ERROR,
 }
 
 interface Action {
@@ -36,6 +40,10 @@ function heapReducer(state: State, action: Action): State {
       return { ...state, status: "removed", data: payload };
     case ActionKind.ERROR:
       return { ...state, status: "error", error: payload };
+    case ActionKind.RESET_ERROR:
+      return { ...state, status: "reseted-error", error: null };
+    case ActionKind.HEAD_UPDATED:
+      return { ...state, status: "head_updated", head: payload };
     default:
       return state;
   }
@@ -59,40 +67,61 @@ export const useHeap = (
   useEffect(() => {
     if (insert === remove) return;
 
-    if (insert && !value) {
+    if (insert && value === null) {
       dispatch({
         type: ActionKind.ERROR,
         payload: "No value given for insertion.",
       });
+      return;
     }
 
-    if (remove && !value) {
+    if (insert && value !== null && value < 0) {
+      dispatch({
+        type: ActionKind.ERROR,
+        payload: "No minus values allowed.",
+      });
+      return;
+    }
+
+    if (remove && value === null) {
       dispatch({
         type: ActionKind.ERROR,
         payload: "No value given for removment.",
       });
     }
 
-    if (insert && value) {
+    if (insert && value !== null) {
       dispatch({ type: ActionKind.INSERTING });
+      dispatch({ type: ActionKind.RESET_ERROR });
 
       const updatedHeap = MaxHeap.insert(heap, value);
       setHeap(updatedHeap);
 
+      dispatch({ type: ActionKind.HEAD_UPDATED, payload: updatedHeap[0] });
       dispatch({ type: ActionKind.INSERTED, payload: updatedHeap });
     }
+    console.log("remove ", remove);
+    console.log("remove ", remove);
 
-    if (remove && value) {
-      dispatch({ type: ActionKind.INSERTING });
+    if (remove && value !== null) {
+      dispatch({ type: ActionKind.REMOVING });
+      dispatch({ type: ActionKind.RESET_ERROR });
 
-      const updatedHeap = MaxHeap.insert(heap, value);
-      setHeap(updatedHeap);
+      if (value >= heap.length || value < 0) {
+        dispatch({
+          type: ActionKind.ERROR,
+          payload: "Given Index/Node is not existing in the Heap.",
+        });
+        return;
+      } else {
+        const updatedHeap = MaxHeap.deleteNode(heap, value);
+        setHeap(updatedHeap);
 
-      dispatch({ type: ActionKind.INSERTED, payload: updatedHeap });
+        dispatch({ type: ActionKind.HEAD_UPDATED, payload: updatedHeap[0] });
+        dispatch({ type: ActionKind.REMOVED, payload: updatedHeap });
+      }
     }
   }, [insert, remove]);
-
-  //TODO: verhindern, dass ein endloses removement oder insertion passiert, wenn remove oder insert nicht wieder auf false gesetzt wird
 
   return state;
 };

@@ -1,109 +1,72 @@
-import React, { useEffect, useState } from "react";
-import logo from "./assets/test.svg";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import { kill } from "process";
-import { clear } from "console";
+import { useHeap } from "./hooks/Heap";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [value, setValue] = useState<number>(0);
+  const [insertValue, setInsertValue] = useState(false);
+  const [removeNode, setRemoveNode] = useState(false);
+
+  const { status, data, head, error } = useHeap(value, insertValue, removeNode);
 
   useEffect(() => {
-    const intervalId: ReturnType<typeof setInterval> = setInterval(() => {
-      setCount((last) => last + 1);
-      console.log(count);
-    }, 1000);
+    console.log("STATUS UPDATE ", status);
+    if (
+      status === "inserted" ||
+      status === "removed" ||
+      status === "error" ||
+      status === "head_updated"
+    ) {
+      console.log("Set insertion and removement to false");
+      setInsertValue(false);
+      setRemoveNode(false);
+    }
+  }, [status, head, data, error]);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  function handleInput(e: any) {
+    const newValue = parseInt(e.target.value);
+    setValue(newValue);
+  }
+
+  function insertHandler() {
+    setRemoveNode(false);
+    setInsertValue(true);
+  }
+
+  function delteHandler() {
+    setRemoveNode(true);
+    setInsertValue(false);
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-        <svg
-          width="86"
-          height="86"
-          viewBox="0 0 86 86"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g id="node_normal">
-            <g id="circle_bg" filter="url(#filter0_dd_7554_610)">
-              <circle cx="43" cy="42" r="40" fill="#3F3F46" />
-              <circle cx="43" cy="42" r="39.5" stroke="white" />
-            </g>
-            <text x="26" y="52" className="text" fill="white">
-              {count}
-            </text>
-          </g>
-          <defs>
-            <filter
-              id="filter0_dd_7554_610"
-              x="0"
-              y="0"
-              width="86"
-              height="86"
-              filterUnits="userSpaceOnUse"
-              color-interpolation-filters="sRGB"
-            >
-              <feFlood flood-opacity="0" result="BackgroundImageFix" />
-              <feColorMatrix
-                in="SourceAlpha"
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                result="hardAlpha"
-              />
-              <feOffset dy="1" />
-              <feGaussianBlur stdDeviation="1.5" />
-              <feColorMatrix
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"
-              />
-              <feBlend
-                mode="normal"
-                in2="BackgroundImageFix"
-                result="effect1_dropShadow_7554_610"
-              />
-              <feColorMatrix
-                in="SourceAlpha"
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                result="hardAlpha"
-              />
-              <feOffset dy="1" />
-              <feGaussianBlur stdDeviation="1" />
-              <feColorMatrix
-                type="matrix"
-                values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0"
-              />
-              <feBlend
-                mode="normal"
-                in2="effect1_dropShadow_7554_610"
-                result="effect2_dropShadow_7554_610"
-              />
-              <feBlend
-                mode="normal"
-                in="SourceGraphic"
-                in2="effect2_dropShadow_7554_610"
-                result="shape"
-              />
-            </filter>
-          </defs>
-        </svg>
+        <input
+          type="number"
+          name="value"
+          id="value"
+          value={value}
+          onChange={handleInput}
+        />
 
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <button disabled={insertValue} onClick={insertHandler}>
+          Insert
+        </button>
+        <button disabled={removeNode} onClick={delteHandler}>
+          Delete
+        </button>
 
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <hr />
+
+        <p>Status:{status}</p>
+        <p>Data:</p>
+        <ul>
+          {data.map((element: number, index: number) => {
+            return <li key={`heap-${index}`}>{element}</li>;
+          })}
+        </ul>
+        <p>Head:{head}</p>
+        <p>Error:{error}</p>
       </header>
     </div>
   );
