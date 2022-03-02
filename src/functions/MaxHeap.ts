@@ -97,7 +97,9 @@ function deleteNode(heap: number[], nodeIndexToDelete: number): number[] {
   console.log("second: ", deletedRootSecond);
 */
 
-export { insert, peek, deleteNode };
+const MaxHeap = { insert, peek, deleteNode };
+
+export default MaxHeap;
 
 /*  
    index from 0
