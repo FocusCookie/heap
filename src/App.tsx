@@ -1,13 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useHeap } from "./hooks/Heap";
+import { Node } from "./interfaces/heap";
+
+const uniqueId = (length = 16) => {
+  return parseInt(
+    Math.ceil(Math.random() * Date.now())
+      .toPrecision(length)
+      .toString()
+      .replace(".", "")
+  );
+};
 
 function App() {
   const [value, setValue] = useState<number>(0);
   const [insertValue, setInsertValue] = useState(false);
   const [removeNode, setRemoveNode] = useState(false);
 
-  const { status, data, head, error } = useHeap(value, insertValue, removeNode);
+  const { status, nodes, head, error } = useHeap(
+    value,
+    insertValue,
+    removeNode
+  );
 
   useEffect(() => {
     console.log("STATUS UPDATE ", status);
@@ -21,7 +35,7 @@ function App() {
       setInsertValue(false);
       setRemoveNode(false);
     }
-  }, [status, head, data, error]);
+  }, [status, head, nodes, error]);
 
   function handleInput(e: any) {
     const newValue = parseInt(e.target.value);
@@ -61,7 +75,7 @@ function App() {
         <p>Status:{status}</p>
         <p>Data:</p>
         <ul>
-          {data.map((element: number, index: number) => {
+          {nodes.map((element: Node, index: number) => {
             return <li key={`heap-${index}`}>{element}</li>;
           })}
         </ul>
