@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useHeap } from "./hooks/Heap";
-import { Node } from "./interfaces/heap";
+import { Node, Step } from "./interfaces/heap";
 
 const uniqueId = (length = 16) => {
   return parseInt(
@@ -17,7 +17,7 @@ function App() {
   const [insertValue, setInsertValue] = useState(false);
   const [removeNode, setRemoveNode] = useState(false);
 
-  const { status, nodes, head, error } = useHeap(
+  const { status, nodes, head, error, steps } = useHeap(
     value,
     insertValue,
     removeNode
@@ -34,6 +34,7 @@ function App() {
       console.log("Set insertion and removement to false");
       setInsertValue(false);
       setRemoveNode(false);
+      console.log(steps);
     }
   }, [status, head, nodes, error]);
 
@@ -75,12 +76,19 @@ function App() {
         <p>Status:{status}</p>
         <p>Data:</p>
         <ul>
-          {nodes.map((element: Node, index: number) => {
-            return <li key={`heap-${index}`}>{element}</li>;
+          {nodes.map((node: Node) => {
+            return <li key={`heap-${node.id}`}>{node.value}</li>;
           })}
         </ul>
         <p>Head:{head}</p>
         <p>Error:{error}</p>
+        <hr />
+        <p>steps:</p>
+        <ul>
+          {steps.map((step: Step, index: number) => {
+            return <li key={`heap-${index}`}>{step.action}</li>;
+          })}
+        </ul>
       </header>
     </div>
   );

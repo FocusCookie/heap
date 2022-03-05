@@ -1,5 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
-import MaxHeap from "../functions/MaxHeap";
+import uniqueId from "../functions/uniqueId";
 import { Node, Step } from "../interfaces/heap";
 
 interface State {
@@ -11,7 +11,6 @@ interface State {
 }
 
 enum ActionKind {
-  STEP_UPDATE,
   INSERTING,
   INSERTED,
   REMOVING,
@@ -31,16 +30,24 @@ function heapReducer(state: State, action: Action): State {
   const { type, payload } = action;
 
   switch (type) {
-    case ActionKind.STEP_UPDATE:
-      return { ...state, status: "step_update", steps: payload };
     case ActionKind.INSERTING:
       return { ...state, status: "inserting" };
     case ActionKind.INSERTED:
-      return { ...state, status: "inserted", nodes: payload };
+      return {
+        ...state,
+        status: "inserted",
+        nodes: payload.nodes,
+        steps: payload.steps,
+      };
     case ActionKind.REMOVING:
       return { ...state, status: "removing" };
     case ActionKind.REMOVED:
-      return { ...state, status: "removed", nodes: payload };
+      return {
+        ...state,
+        status: "removed",
+        nodes: payload.nodes,
+        steps: payload.steps,
+      };
     case ActionKind.ERROR:
       return { ...state, status: "error", error: payload };
     case ActionKind.RESET_ERROR:
@@ -65,7 +72,7 @@ export const useHeap = (
     error: null,
   };
 
-  const [heap, setHeap] = useState<number[]>([]);
+  const [heap, setHeap] = useState<Node[]>([]);
   const [state, dispatch] = useReducer(heapReducer, inititalState);
 
   useEffect(() => {
@@ -95,75 +102,56 @@ export const useHeap = (
     }
 
     if (insert && value !== null) {
+      const steps: Step[] = state.steps.map((el) => el);
       dispatch({ type: ActionKind.INSERTING });
       dispatch({ type: ActionKind.RESET_ERROR });
 
-      const nodes = heap.map((val) => val);
-      // add node to heap on the last node tree
-      nodes.push(value);
+      const nodes: Node[] = heap.map((node) => node);
+      const insertedNode: Node = { value: value, id: uniqueId() };
+      nodes.push(insertedNode);
 
-      let valueIndex: number = nodes.length - 1;
+      steps.push({ action: `Inserted: ${insertedNode.value}`, nodes: nodes });
 
+      let insertedNodeIndex: number = nodes.length - 1;
       let checkedInsertedValueWithParents: boolean = false;
 
       // check the inserted value against its parents until its not bigger than the parent
       while (!checkedInsertedValueWithParents) {
-        if (valueIndex === 0) {
+        if (insertedNodeIndex === 0) {
           checkedInsertedValueWithParents = true;
         } else {
-          const parentIndex: number = Math.floor((valueIndex - 1) / 2);
-          const parent: number = nodes[parentIndex];
+          const parentIndex: number = Math.floor((insertedNodeIndex - 1) / 2);
+          const parent: Node = nodes[parentIndex];
 
-          if (parent < value) {
-            nodes[parentIndex] = value;
-            nodes[valueIndex] = parent;
+          if (parent.value < insertedNode.value) {
+            nodes[parentIndex] = insertedNode;
+            nodes[insertedNodeIndex] = parent;
 
-            //update indexes
-            valueIndex = parentIndex;
+            insertedNodeIndex = parentIndex;
 
-            const updatedSteps = [
-              ...state.steps,
-              { action: `Compare: ${parent} < ${value}`, nodes: nodes },
-            ];
-
-            dispatch({ type: ActionKind.STEP_UPDATE, payload: updatedSteps });
+            steps.push({
+              action: `Switch - ${parent.value} < ${insertedNode.value} = ${
+                parent.value < insertedNode.value
+              }`,
+              nodes: nodes,
+            });
           } else {
             checkedInsertedValueWithParents = true;
           }
         }
       }
 
-      const updatedHeap = MaxHeap.insert(heap, value);
+      setHeap(nodes);
 
-      setHeap(updatedHeap);
-
-      const updatedSteps = [
-        ...state.steps,
-        { action: `Inserted ${value}`, nodes: updatedHeap },
-      ];
-
-      dispatch({ type: ActionKind.STEP_UPDATE, payload: updatedSteps });
-      dispatch({ type: ActionKind.HEAD_UPDATED, payload: updatedHeap[0] });
-      dispatch({ type: ActionKind.INSERTED, payload: updatedHeap });
+      dispatch({ type: ActionKind.HEAD_UPDATED, payload: nodes[0].value });
+      dispatch({ type: ActionKind.INSERTED, payload: { nodes, steps } });
     }
 
     if (remove && value !== null) {
       dispatch({ type: ActionKind.REMOVING });
       dispatch({ type: ActionKind.RESET_ERROR });
 
-      if (value >= heap.length || value < 0) {
-        dispatch({
-          type: ActionKind.ERROR,
-          payload: "Given Index/Node is not existing in the Heap.",
-        });
-        return;
-      } else {
-        const updatedHeap = MaxHeap.deleteNode(heap, value);
-        setHeap(updatedHeap);
-
-        dispatch({ type: ActionKind.HEAD_UPDATED, payload: updatedHeap[0] });
-        dispatch({ type: ActionKind.REMOVED, payload: updatedHeap });
-      }
+      console.log("DELETE INDEX", value);
     }
   }, [insert, remove]);
 

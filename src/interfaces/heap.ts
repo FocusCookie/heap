@@ -1,12 +1,6 @@
-interface Coordinates {
-  x: number;
-  y: number;
-}
-
 interface Node {
   id: string;
   value: number;
-  coordinates: Coordinates;
 }
 
 interface Step {
@@ -14,4 +8,4 @@ interface Step {
   nodes: Node[];
 }
 
-export type { Coordinates, Node, Step };
+export type { Node, Step };
