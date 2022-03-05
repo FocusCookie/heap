@@ -76,7 +76,13 @@ export const useHeap = (
   const [state, dispatch] = useReducer(heapReducer, inititalState);
 
   useEffect(() => {
-    if (insert === remove) return;
+    if (remove && insert) {
+      dispatch({
+        type: ActionKind.ERROR,
+        payload: "Cant remove and insert at the same time.",
+      });
+      return;
+    }
 
     if (insert && value === null) {
       dispatch({
@@ -92,13 +98,6 @@ export const useHeap = (
         payload: "No minus values allowed.",
       });
       return;
-    }
-
-    if (remove && value === null) {
-      dispatch({
-        type: ActionKind.ERROR,
-        payload: "No value given for removment.",
-      });
     }
 
     if (insert && value !== null) {
@@ -130,7 +129,7 @@ export const useHeap = (
             insertedNodeIndex = parentIndex;
 
             steps.push({
-              action: `Switch - ${parent.value} < ${insertedNode.value} = ${
+              action: `Switch: ${parent.value} < ${insertedNode.value} = ${
                 parent.value < insertedNode.value
               }`,
               nodes: nodes,
@@ -147,11 +146,109 @@ export const useHeap = (
       dispatch({ type: ActionKind.INSERTED, payload: { nodes, steps } });
     }
 
-    if (remove && value !== null) {
+    if (remove) {
       dispatch({ type: ActionKind.REMOVING });
       dispatch({ type: ActionKind.RESET_ERROR });
 
-      console.log("DELETE INDEX", value);
+      const steps: Step[] = state.steps.map((el) => el);
+      const nodes: Node[] = heap.map((node) => node);
+      const nodeIndexToDelete: number = 0;
+      const nodeToDelete: Node = nodes[nodeIndexToDelete];
+
+      const lastNodeIndex: number = nodes.length - 1;
+      let checkedTreeForBalancing: boolean = false;
+
+      if (nodeIndexToDelete === nodes.length - 1) {
+        console.log("hier");
+        nodes.pop();
+
+        steps.push({
+          action: `Removed: ${nodeToDelete.value}`,
+          nodes: nodes,
+        });
+      } else {
+        // swap delete index with root
+        const lastNode = nodes[lastNodeIndex];
+
+        // switch node to delete with the last leaf node in the tree
+        nodes[nodeIndexToDelete] = lastNode;
+        nodes[lastNodeIndex] = nodes[nodeIndexToDelete];
+
+        steps.push({
+          action: `Swap: ${nodeToDelete.value} with ${lastNode.value}`,
+          nodes: nodes,
+        });
+
+        // delete last node which is the node to delete
+        nodes.pop();
+
+        if (nodes.length === 0) checkedTreeForBalancing = false;
+
+        steps.push({
+          action: `Removed: ${nodeToDelete.value}`,
+          nodes: nodes,
+        });
+
+        let parentIndex: number = nodeIndexToDelete;
+
+        while (!checkedTreeForBalancing) {
+          console.log("while");
+          const parentLeftNodeIndex: number = 2 * parentIndex + 1;
+          const parentRightNodeIndex: number = 2 * parentIndex + 2;
+
+          const parent: Node = nodes[parentIndex];
+          const leftNode: Node = nodes[parentLeftNodeIndex];
+          const rightNode: Node = nodes[parentRightNodeIndex];
+          const rightNodeExists: boolean = typeof rightNode === "object";
+          const leftNodeExists: boolean = typeof leftNode === "object";
+
+          const switchParentWithChildNode =
+            (leftNodeExists && leftNode.value > parent.value) ||
+            (rightNodeExists && rightNode.value > parent.value);
+
+          const leftNodeIsBiggerThenRightNode =
+            leftNodeExists &&
+            rightNodeExists &&
+            leftNode.value > rightNode.value;
+
+          if (switchParentWithChildNode) {
+            if (
+              leftNodeIsBiggerThenRightNode ||
+              (leftNodeExists && !rightNode)
+            ) {
+              nodes[parentIndex] = leftNode;
+              nodes[parentLeftNodeIndex] = parent;
+              parentIndex = parentLeftNodeIndex;
+
+              steps.push({
+                action: `Swap: ${leftNode.value} > ${parent.value} = true`,
+                nodes: nodes,
+              });
+            }
+
+            if (!leftNodeIsBiggerThenRightNode && rightNode) {
+              nodes[parentIndex] = rightNode;
+              nodes[parentRightNodeIndex] = parent;
+              parentIndex = parentRightNodeIndex;
+
+              steps.push({
+                action: `Swap: ${rightNode.value} > ${parent.value} = true`,
+                nodes: nodes,
+              });
+            }
+          } else {
+            checkedTreeForBalancing = true;
+          }
+        }
+      }
+
+      setHeap(nodes);
+
+      dispatch({
+        type: ActionKind.HEAD_UPDATED,
+        payload: nodes[0] ? nodes[0].value : null,
+      });
+      dispatch({ type: ActionKind.REMOVED, payload: { nodes, steps } });
     }
   }, [insert, remove]);
 
