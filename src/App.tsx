@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useHeap } from "./hooks/Heap";
 import { Node, Step } from "./interfaces/heap";
+import heapDrawUtilities from "./functions/heapDrawUtilities";
 
 const uniqueId = (length = 16) => {
   return parseInt(
@@ -31,10 +32,12 @@ function App() {
       status === "error" ||
       status === "head_updated"
     ) {
-      console.log("Set insertion and removement to false");
       setInsertValue(false);
       setRemoveNode(false);
       console.log(steps);
+      console.log("-----");
+      console.log(heapDrawUtilities.addLevels(nodes));
+      console.log("-----");
     }
   }, [status, head, nodes, error]);
 
