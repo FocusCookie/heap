@@ -37,6 +37,16 @@ function addLevels(heap: Node[]): LeveledNode[] {
   return leveledHeap;
 }
 
-const heapDrawUtilities = { addLevels };
+function sortedByLevel(heap: LeveledNode[]) {
+  if (heap.length === 0) return [];
+
+  return heap.reduce((acc: any, curr: any) => {
+    if (!acc[curr.level]) acc[curr.level] = [];
+    acc[curr.level].push(curr);
+    return acc;
+  }, []);
+}
+
+const heapDrawUtilities = { addLevels, sortedByLevel };
 
 export default heapDrawUtilities;
