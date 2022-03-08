@@ -11,7 +11,7 @@ function getRangeForLevel(level: number): number {
 function addLevels(heap: Node[]): LeveledNode[] {
   if (heap.length === 0) return [];
 
-  const leveledHeap = heap.map((node) => Object.assign({ level: 1 }, node));
+  const leveledHeap = heap.map((node) => Object.assign({ level: -1 }, node));
 
   let level: number = 0;
   let index: number = 0;

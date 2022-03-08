@@ -1,7 +1,2 @@
 .heap {
-  @apply bg-red-500;
-}
-
-.heap__node {
-  transform: translate(100px, 100px);
 }

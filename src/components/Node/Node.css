@@ -1,4 +1,5 @@
 .node {
+  transition: all 1s ease-out;
   fill-rule: evenodd;
   clip-rule: evenodd;
   stroke-linejoin: round;

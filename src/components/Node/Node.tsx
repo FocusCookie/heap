@@ -1,21 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Node.css";
 
 type Props = {
   value: number;
   variant?: "head" | "normal" | "insert";
   diameter?: number;
-  transX?: string;
-  transY?: string;
+  x?: number;
+  y?: number;
 };
 
 export default function Node({
   value = 99,
   variant = "normal",
   diameter = 80,
-  transX = "0px",
-  transY = "0px",
+  x = -100,
+  y = -100,
 }: Props) {
+  const [transX, setTransX] = useState<number>(-100);
+  const [transY, setTransY] = useState<number>(-100);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setTransY(y);
+      setTransX(x);
+    }, 250);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [x, y]);
+
   return (
     <svg
       width={`${diameter}`}
@@ -24,7 +38,7 @@ export default function Node({
       className="node"
       viewBox="0 0 100 100"
       preserveAspectRatio="xMidYMid meet"
-      style={{ transform: `translate(${transX}, ${transY})` }}
+      style={{ transform: `translate(${transX}px, ${transY}px)` }}
     >
       <circle
         className={`node__bg ${variant === "insert" ? "node__bg--insert" : ""}`}

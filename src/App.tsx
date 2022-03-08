@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useHeap } from "./hooks/Heap";
-import { Node, Step } from "./interfaces/heap";
+import { Node, Step, DrawingNode } from "./interfaces/heap";
 import heapDrawUtilities from "./functions/heapDrawUtilities";
 import Heap from "./components/Heap/Heap";
+import uniqueId from "./functions/uniqueId";
+
+function getInitialOffsetForLevel(level: number): number {
+  let result: number = 0;
+
+  if (level > 0) {
+    for (let i: number = 1; i <= level; i++)
+      result = result + Math.pow(2, i + 1) * 10;
+  }
+
+  return result;
+}
 
 function App() {
   const [value, setValue] = useState<number>(0);
   const [insertValue, setInsertValue] = useState(false);
   const [removeNode, setRemoveNode] = useState(false);
+  const [heap, setHeap] = useState<any[]>([]);
 
   const { status, nodes, head, error, steps } = useHeap(
     value,
     insertValue,
     removeNode
   );
+
+  const NODE_DIAMETER = 80;
 
   useEffect(() => {
     console.log("STATUS UPDATE ", status);
@@ -27,14 +42,54 @@ function App() {
       setInsertValue(false);
       setRemoveNode(false);
 
-      console.log(steps);
-      console.log("-----");
       const leveled = heapDrawUtilities.addLevels(nodes);
-      console.log("lvl ", leveled);
-      const sorted = heapDrawUtilities.sortedByLevel(leveled);
-      console.log("sorted ", sorted);
+      const sortedByLevel = heapDrawUtilities.sortedByLevel(leveled);
 
-      console.log("-----");
+      const updatedDrawedHeap: any = {};
+      sortedByLevel
+        .slice()
+        .reverse()
+        .forEach((nodes: any, lvlIndex: number) => {
+          nodes.forEach((node: any, nodeIndex: number, lvlNodes: any) => {
+            const x: number =
+              nodeIndex * (Math.pow(2, lvlIndex) * 80) +
+              getInitialOffsetForLevel(lvlIndex);
+            const y: number = node.level * 160;
+
+            const x2: number =
+              Math.floor(nodeIndex / 2) * (Math.pow(2, lvlIndex + 1) * 80) +
+              40 +
+              getInitialOffsetForLevel(lvlIndex + 1);
+            const y2: number = y - 120;
+
+            const headId = sortedByLevel[0][0].id;
+
+            const drawedLine = {
+              type: "line",
+              id: node.id + "_line_" + nodeIndex,
+              x1: headId !== node.id ? x : -100,
+              y1: headId !== node.id ? y : -100,
+              x2: headId !== node.id ? x2 : -100,
+              y2: headId !== node.id ? y2 : -100,
+            };
+
+            updatedDrawedHeap[drawedLine.id] = drawedLine;
+
+            const drawedNode: DrawingNode = {
+              type: "node",
+              node: node,
+              variant: headId === node.id ? "head" : "normal",
+              diameter: NODE_DIAMETER,
+              x: x,
+              y: y,
+              key: node.id,
+            };
+
+            updatedDrawedHeap[node.id] = drawedNode;
+          });
+        });
+
+      setHeap(updatedDrawedHeap);
     }
   }, [status, head, nodes, error]);
 
@@ -52,166 +107,9 @@ function App() {
     setRemoveNode(true);
     setInsertValue(false);
   }
-  const leveledHeap: any = heapDrawUtilities.sortedByLevel([
-    {
-      level: 0,
-      value: 73412,
-      id: "ID_5000191778850000",
-    },
-    {
-      level: 1,
-      value: 9675,
-      id: "ID_1118534989444000",
-    },
-    {
-      level: 1,
-      value: 333,
-      id: "ID_1368300221671000",
-    },
-    {
-      level: 2,
-      value: 111,
-      id: "ID_1443175222450000",
-    },
-    {
-      level: 2,
-      value: 734,
-      id: "ID_1201995536436000",
-    },
-    {
-      level: 2,
-      value: 234,
-      id: "ID_1606677296258000",
-    },
-    {
-      level: 2,
-      value: 85,
-      id: "ID_2544045767070000",
-    },
-    {
-      level: 3,
-      value: 65,
-      id: "ID_1274732125484000",
-    },
-    {
-      level: 3,
-      value: 99,
-      id: "ID_5614322478300000",
-    },
-    {
-      level: 3,
-      value: 235,
-      id: "ID_5774371380820000",
-    },
-    {
-      level: 3,
-      value: 564,
-      id: "ID_1116489312747000",
-    },
-    {
-      level: 3,
-      value: 53,
-      id: "ID_3264685245830000",
-    },
-    {
-      level: 3,
-      value: 222,
-      id: "ID_5089028449930000",
-    },
-    {
-      level: 3,
-      value: 3,
-      id: "ID_1021593735912000",
-    },
-    {
-      level: 3,
-      value: 23,
-      id: "ID_1201189828192000",
-    },
-    {
-      level: 4,
-      value: 1,
-      id: "ID_1536291559415000",
-    },
-    {
-      level: 4,
-      value: 23,
-      id: "ID_1003324310905000",
-    },
-    {
-      level: 4,
-      value: 23,
-      id: "ID_6095430965960000",
-    },
-    {
-      level: 4,
-      value: 34,
-      id: "ID_1159954210931000",
-    },
-    {
-      level: 4,
-      value: 23,
-      id: "ID_1591746202357000",
-    },
-    {
-      level: 4,
-      value: 68,
-      id: "ID_2283280170910000",
-    },
-    {
-      level: 4,
-      value: 24,
-      id: "ID_1074524434238000",
-    },
-    {
-      level: 4,
-      value: 23,
-      id: "ID_1226308704070000",
-    },
-    {
-      level: 4,
-      value: 11,
-      id: "ID_6489275318330000",
-    },
-    {
-      level: 4,
-      value: 23,
-      id: "ID_1442890394655000",
-    },
-    {
-      level: 4,
-      value: 21,
-      id: "ID_1002173310183000",
-    },
-    {
-      level: 4,
-      value: 1,
-      id: "ID_9366039722820000",
-    },
-    {
-      level: 4,
-      value: 2,
-      id: "ID_3061469872190000",
-    },
-    {
-      level: 4,
-      value: 3,
-      id: "ID_1405585978690000",
-    },
-    {
-      level: 4,
-      value: 4,
-      id: "ID_1187966078337000",
-    },
-    {
-      level: 4,
-      value: 5,
-      id: "ID_1061260622492000",
-    },
-  ]);
 
   return (
-    <div className="App">
+    <div className="App flex flex-row gap-4">
       <header className="App-header">
         <input
           type="number"
@@ -247,8 +145,7 @@ function App() {
           })}
         </ul>
       </header>
-      <br />
-      <Heap leveledHeap={leveledHeap} />
+      <Heap heap={heap} />
     </div>
   );
 }
