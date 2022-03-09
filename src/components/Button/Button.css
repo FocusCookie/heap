@@ -1,0 +1,34 @@
+.btn {
+  @apply transition-all outline-none border-2 border-transparent
+    rounded px-4 py-2 uppercase font-bold text-4xl;
+}
+
+.btn--single {
+  @apply pb-4 px-6;
+}
+
+.btn--primary {
+  @apply bg-yellow-300 text-gray-800 border-2 border-yellow-300 border-solid;
+}
+.btn--primary:hover,
+.btn--primary:focus {
+  box-shadow: 4px 4px 0px #fff;
+}
+
+.btn--secondary {
+  @apply bg-white text-gray-800;
+}
+.btn--secondary:hover,
+.btn--secondary:focus {
+  box-shadow: 4px 4px 0px #fde047;
+}
+
+.btn--subtle {
+  @apply bg-transparent text-white border-solid border-2 border-white;
+}
+
+.btn--subtle:hover,
+.btn--subtle:focus {
+  box-shadow: 4px 4px 0px #fde047;
+  @apply text-yellow-300;
+}

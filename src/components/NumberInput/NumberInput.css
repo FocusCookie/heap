@@ -1,0 +1,13 @@
+.number-input__input {
+  @apply transition-all px-4 py-2 text-4xl font-bold text-white
+    rounded-lg bg-transparent border-2 border-solid border-white text-center w-full focus:outline-none focus:text-yellow-300;
+}
+
+.number-input__label {
+  @apply text-white uppercase font-sans font-black
+    text-sm flex flex-col items-center w-36;
+}
+.number-input__input:hover,
+.number-input__input:focus {
+  box-shadow: 4px 4px 0px #fde047;
+}

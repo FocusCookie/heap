@@ -23,7 +23,7 @@ export default function Heap({ heap = [] }: Props) {
               y1={heap[key].y1 + 40}
               x2={heap[key].x2}
               y2={heap[key].y2}
-              stroke="red"
+              stroke="white"
               strokeWidth="5"
               key={heap[key].id}
             />

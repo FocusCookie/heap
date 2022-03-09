@@ -4,7 +4,8 @@ import { useHeap } from "./hooks/Heap";
 import { Node, Step, DrawingNode } from "./interfaces/heap";
 import heapDrawUtilities from "./functions/heapDrawUtilities";
 import Heap from "./components/Heap/Heap";
-import uniqueId from "./functions/uniqueId";
+import Button from "./components/Button/Button";
+import NumberInput from "./components/NumberInput/NumberInput";
 
 function getInitialOffsetForLevel(level: number): number {
   let result: number = 0;
@@ -56,6 +57,7 @@ function App() {
               getInitialOffsetForLevel(lvlIndex);
             const y: number = node.level * 160;
 
+            //* calculate the parent x, and y coordinate
             const x2: number =
               Math.floor(nodeIndex / 2) * (Math.pow(2, lvlIndex + 1) * 80) +
               40 +
@@ -109,43 +111,37 @@ function App() {
   }
 
   return (
-    <div className="App flex flex-row gap-4">
-      <header className="App-header">
-        <input
-          type="number"
+    <div className="app">
+      <h1 className="app__title">Heap</h1>
+
+      <div className="app__controls">
+        <NumberInput
+          label="insert number"
           name="value"
           id="value"
-          value={value}
+          value={`${value}`}
           onChange={handleInput}
+          disabled={insertValue}
         />
 
-        <button disabled={insertValue} onClick={insertHandler}>
-          Insert
-        </button>
-        <button disabled={removeNode} onClick={delteHandler}>
-          Delete
-        </button>
+        <Button
+          variant="primary"
+          onClick={insertHandler}
+          label="insert node"
+          disabled={insertValue}
+        />
 
-        <hr />
+        <Button
+          variant="subtle"
+          onClick={delteHandler}
+          label="remove head"
+          disabled={removeNode}
+        />
+      </div>
 
-        <p>Status:{status}</p>
-        <p>Data:</p>
-        <ul>
-          {nodes.map((node: Node) => {
-            return <li key={`heap-${node.id}`}>{node.value}</li>;
-          })}
-        </ul>
-        <p>Head:{head}</p>
-        <p>Error:{error}</p>
-        <hr />
-        <p>steps:</p>
-        <ul>
-          {steps.map((step: Step, index: number) => {
-            return <li key={`heap-${index}`}>{step.action}</li>;
-          })}
-        </ul>
-      </header>
-      <Heap heap={heap} />
+      <main className="app__main">
+        <Heap heap={heap} />
+      </main>
     </div>
   );
 }
