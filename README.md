@@ -1,3 +1,12 @@
+# Repo
+
+This repo is for learning purposes. I want to make datastructures and algorithm more visual. This will be done with HTML, CSS and react.
+
+# Live Demo
+
+You can check out the latest version.
+[Max Heap Demo](https://focuscookie.github.io/heap/).
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
