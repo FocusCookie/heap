@@ -44,8 +44,6 @@ function App() {
       setInsertValue(false);
       setRemoveNode(false);
 
-      console.log(steps);
-
       const leveled = heapDrawUtilities.addLevels(nodes);
       const sortedByLevel = heapDrawUtilities.sortedByLevel(leveled);
 
@@ -100,7 +98,7 @@ function App() {
 
   function handleInput(e: any) {
     const newValue = parseInt(e.target.value.slice(0, 2));
-    setValue(newValue);
+    setValue(newValue < 0 ? 0 : newValue);
   }
 
   function insertHandler() {
