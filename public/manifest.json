@@ -1,6 +1,6 @@
 {
-  "short_name": "Heap Visualization",
-  "name": "Heap Visualization",
+  "short_name": "Max Heap",
+  "name": "Max Heap Visualization",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#27272A",
+  "background_color": "#27272A"
 }
