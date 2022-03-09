@@ -8,7 +8,7 @@ type Props = {
 export default function Log({ value = "..." }: Props) {
   return (
     <div className="log">
-      {"//"} {value}
+      {"👉 "} {value}
     </div>
   );
 }

@@ -7,7 +7,7 @@ import Heap from "./components/Heap/Heap";
 import Button from "./components/Button/Button";
 import NumberInput from "./components/NumberInput/NumberInput";
 import Codebox from "./components/Codebox/Codebox";
-import ConsoleLog from "./components/ConsoleLog/ConsoleLog";
+import Log from "./components/Log/Log";
 
 function getInitialOffsetForLevel(level: number): number {
   let result: number = 0;
@@ -99,7 +99,7 @@ function App() {
   }, [status, head, nodes, error, steps]);
 
   function handleInput(e: any) {
-    const newValue = parseInt(e.target.value);
+    const newValue = parseInt(e.target.value.slice(0, 2));
     setValue(newValue);
   }
 
@@ -145,7 +145,9 @@ function App() {
       <main className="app__main">
         <div className="app__terminal">
           <Codebox>
-            <ConsoleLog value="hallo" />
+            {steps.map((step, index) => (
+              <Log value={step.action} key={`step-4${index}`} />
+            ))}
           </Codebox>
         </div>
         <Heap heap={heap} />

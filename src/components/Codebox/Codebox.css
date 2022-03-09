@@ -20,5 +20,5 @@
 }
 
 .codebox__content {
-  @apply text-left;
+  @apply text-left flex flex-col gap-2;
 }
