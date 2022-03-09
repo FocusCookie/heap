@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Heap.css";
 import Node from "../Node/Node";
 
@@ -16,7 +16,6 @@ export default function Heap({ heap = [] }: Props) {
     >
       {Object.keys(heap).map((key) => {
         if (heap[key].type === "line") {
-          console.log("line ", heap[key]);
           return (
             <line
               x1={heap[key].x1 + 40}
@@ -42,24 +41,6 @@ export default function Heap({ heap = [] }: Props) {
           );
         }
       })}
-
-      {/* 
-      <line
-        x1={400}
-        y1={80}
-        x2={500 - 80}
-        y2="160"
-        stroke="white"
-        strokeWidth="5"
-      />
-      <Node value={9} variant="normal" diameter={80} transX={`${500 - 40}px`} />
-      <Node
-        value={9}
-        variant="normal"
-        diameter={80}
-        transX={`${500 - 120}px`}
-        transY="120px"
-      /> */}
     </svg>
   );
 }

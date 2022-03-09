@@ -1,0 +1,10 @@
+.console-log {
+  @apply text-white font-sans;
+}
+.console-log__method {
+  @apply text-purple-400 font-semibold;
+}
+
+.console-log__arg {
+  @apply text-green-400;
+}

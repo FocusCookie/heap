@@ -7,7 +7,11 @@
 }
 
 .app__main {
-  @apply flex flex-row gap-4;
+  @apply flex flex-row items-start gap-4;
+}
+
+.app__terminal {
+  @apply w-96 px-4;
 }
 
 .app__controls {

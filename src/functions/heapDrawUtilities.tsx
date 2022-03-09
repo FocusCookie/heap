@@ -20,8 +20,6 @@ function addLevels(heap: Node[]): LeveledNode[] {
   while (!reachedHeapEnd) {
     let range: number = getRangeForLevel(level);
 
-    console.log(`${index} <= ${range} =  ${index <= range}`);
-
     if (index <= range) {
       leveledHeap[index].level = level;
       if (index < heap.length - 1) {

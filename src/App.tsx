@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { useHeap } from "./hooks/Heap";
-import { Node, Step, DrawingNode } from "./interfaces/heap";
+import { DrawingNode } from "./interfaces/heap";
 import heapDrawUtilities from "./functions/heapDrawUtilities";
 import Heap from "./components/Heap/Heap";
 import Button from "./components/Button/Button";
 import NumberInput from "./components/NumberInput/NumberInput";
+import Codebox from "./components/Codebox/Codebox";
+import ConsoleLog from "./components/ConsoleLog/ConsoleLog";
 
 function getInitialOffsetForLevel(level: number): number {
   let result: number = 0;
@@ -33,7 +35,6 @@ function App() {
   const NODE_DIAMETER = 80;
 
   useEffect(() => {
-    console.log("STATUS UPDATE ", status);
     if (
       status === "inserted" ||
       status === "removed" ||
@@ -42,6 +43,8 @@ function App() {
     ) {
       setInsertValue(false);
       setRemoveNode(false);
+
+      console.log(steps);
 
       const leveled = heapDrawUtilities.addLevels(nodes);
       const sortedByLevel = heapDrawUtilities.sortedByLevel(leveled);
@@ -93,7 +96,7 @@ function App() {
 
       setHeap(updatedDrawedHeap);
     }
-  }, [status, head, nodes, error]);
+  }, [status, head, nodes, error, steps]);
 
   function handleInput(e: any) {
     const newValue = parseInt(e.target.value);
@@ -140,6 +143,11 @@ function App() {
       </div>
 
       <main className="app__main">
+        <div className="app__terminal">
+          <Codebox>
+            <ConsoleLog value="hallo" />
+          </Codebox>
+        </div>
         <Heap heap={heap} />
       </main>
     </div>

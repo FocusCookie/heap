@@ -159,7 +159,6 @@ export const useHeap = (
       let checkedTreeForBalancing: boolean = false;
 
       if (nodeIndexToDelete === nodes.length - 1) {
-        console.log("hier");
         nodes.pop();
 
         steps.push({
@@ -192,7 +191,6 @@ export const useHeap = (
         let parentIndex: number = nodeIndexToDelete;
 
         while (!checkedTreeForBalancing) {
-          console.log("while");
           const parentLeftNodeIndex: number = 2 * parentIndex + 1;
           const parentRightNodeIndex: number = 2 * parentIndex + 2;
 
