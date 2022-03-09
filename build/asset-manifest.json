@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/FocusCookie/heap/static/css/main.a10b8720.css",
+    "main.js": "/FocusCookie/heap/static/js/main.152ad545.js",
+    "static/js/787.e7eea390.chunk.js": "/FocusCookie/heap/static/js/787.e7eea390.chunk.js",
+    "index.html": "/FocusCookie/heap/index.html",
+    "main.a10b8720.css.map": "/FocusCookie/heap/static/css/main.a10b8720.css.map",
+    "main.152ad545.js.map": "/FocusCookie/heap/static/js/main.152ad545.js.map",
+    "787.e7eea390.chunk.js.map": "/FocusCookie/heap/static/js/787.e7eea390.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a10b8720.css",
+    "static/js/main.152ad545.js"
+  ]
+}
